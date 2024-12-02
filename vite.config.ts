@@ -4,6 +4,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: './app',
+  build: {
+    outDir: '../dist/build'
+  },
   plugins: [react()],
   resolve: {
     alias: {

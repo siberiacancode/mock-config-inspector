@@ -5,8 +5,14 @@ import App from './App.tsx';
 
 import './assets/styles/global.css';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+const init = async () => {
+  const payload = await (await fetch('/api/payload')).json();
+  console.log('@', payload);
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App payload={payload} />
+    </StrictMode>
+  );
+};
+
+init();
