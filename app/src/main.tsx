@@ -282,7 +282,7 @@ const payload = {
 }
 
 const init = async () => {
-  // const payload = await (await fetch('/api/payload')).json();
+  const payload = await (await fetch('/api/payload')).json();
 
   createRoot(document.getElementById('root')!).render(
     <StrictMode>

@@ -1,6 +1,9 @@
 import color from 'ansi-colors';
-import express from 'express';
 import { getPort } from 'get-port-please';
+import { createApp, eventHandler, serveStatic, toNodeListener } from 'h3';
+import { lookup } from 'mrmime';
+import { readFile, stat } from 'node:fs/promises';
+import { createServer } from 'node:http';
 import path from 'node:path';
 import open from 'open';
 
@@ -14,7 +17,8 @@ export const start = async (argv: MockServerInspectorArgv) => {
   const host = argv.host ?? '127.0.0.1';
   const port = await getPort({ port: argv.port, portRange: [7777, 9000], host });
 
-  const server = express();
+  const app = createApp();
+
   const ws = await createWsServer();
 
   const watcher = await createConfigWatcher(argv, (mockConfig) =>
@@ -25,19 +29,47 @@ export const start = async (argv: MockServerInspectorArgv) => {
     )
   );
 
-  server.get('/', (_req, res) => res.sendFile(path.join(__dirname, '..', 'build', 'index.html')));
+  app.use(
+    '/api/payload',
+    eventHandler(async (event) => {
+      event.node.res.setHeader('Content-Type', 'application/json');
+      return event.node.res.end(
+        JSON.stringify({ ws: ws.getData(), config: stringify(watcher.getConfig()) })
+      );
+    })
+  );
 
-  server.get('/api/payload', (_req, res) => {
-    res.json({ ws: ws.getData(), config: stringify(watcher.getConfig()) });
-  });
+  app.use(
+    '/api/config',
+    eventHandler(async (event) => {
+      event.node.res.setHeader('Content-Type', 'application/json');
+      return event.node.res.end(JSON.stringify(stringify(watcher.getConfig())));
+    })
+  );
 
-  server.get('/config', (_req, res) => {
-    res.json(stringify(watcher.getConfig()));
-  });
+  app.use(
+    '/',
+    eventHandler((event) =>
+      serveStatic(event, {
+        getContents: (file) => readFile(path.join(__dirname, '..', 'build', file)),
+        getMeta: async (file) => {
+          const stats = await stat(path.join(__dirname, '..', 'build', file));
 
-  console.log('@watcher.getConfig()', watcher.getConfig()[3].interceptors.response.toString());
+          if (!stats || !stats.isFile()) {
+            return;
+          }
 
-  server.use(express.static(path.join(__dirname, '..', 'build')));
+          return {
+            type: lookup(file),
+            size: stats.size,
+            mtime: stats.mtimeMs
+          };
+        }
+      })
+    )
+  );
+
+  const server = createServer(toNodeListener(app));
 
   server.listen(port, async () => {
     const url = `http://${host === '127.0.0.1' ? 'localhost' : host}:${port}`;
