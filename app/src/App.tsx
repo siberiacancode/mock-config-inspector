@@ -5,21 +5,17 @@ interface AppProps {
   payload: any;
 }
 
-const App = ({ payload }: AppProps) => {
-  const [lastUpdated, setLastUpdated] = useState(payload.meta.lastUpdated);
-  useWebSocket(`ws://${location.hostname}:${payload.meta.wsPort}`, {
+const App = (props: AppProps) => {
+  const [payload, setPayload] = useState(props.payload);
+
+  useWebSocket(`ws://${location.hostname}:${props.payload.ws.port}`, {
     onMessage: (event) => {
-      console.log('@event', event);
-      setLastUpdated(Date.now());
+      console.log('@event2', event);
+      setPayload(JSON.parse(event.data).payload);
     }
   });
 
-  return (
-    <>
-      <p>{lastUpdated}</p>
-      <code>{JSON.stringify(payload)}</code>
-    </>
-  );
+  return <pre>{JSON.stringify(payload, null, 2)}</pre>;
 };
 
 export default App;

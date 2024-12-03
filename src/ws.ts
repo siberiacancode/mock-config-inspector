@@ -17,17 +17,16 @@ export const createWsServer = async () => {
     ws.on('close', () => wsClients.delete(ws));
   });
 
-  const getData = () => {
-    return {
-      meta: {
-        wsPort: port,
-        lastUpdated: Date.now()
-      }
-    };
-  };
+  const getData = () => ({
+    port,
+    lastUpdated: Date.now()
+  });
+
+  const send = (value: string) => wsClients.forEach((wsClient) => wsClient.send(value));
 
   return {
     port,
+    send,
     wss,
     getData
   };
