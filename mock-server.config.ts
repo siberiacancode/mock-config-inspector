@@ -33,10 +33,48 @@ export type FlatMockServerConfig = [
 
 const flatMockServerConfig: FlatMockServerConfig = [
   {
-    baseUrl: '/',
-    port: 31299,
-    staticPath: '/'
+    baseUrl: '/'
   },
+  // {
+  //   port: 31299
+  // },
+  // {
+  //   // staticPath: {
+  //   //   path: '/images',
+  //   //   prefix: '/files'
+  //   // }
+  //   // staticPath: [
+  //   //   '/images',
+  //   //   {
+  //   //     path: '/images',
+  //   //     prefix: '/files'
+  //   //   }
+  //   // ]
+  //   staticPath: '/'
+  // },
+  // {
+  //   cors: {
+  //     // origin: () => new Promise((res) => 'https://www.google.com')
+  //     // origin: () => 'https://www.google.com'
+  //     // origin: ['https://www.google.com']
+  //     origin: 'https://www.google.com',
+  //     methods: ['GET'],
+  //     allowedHeaders: ['accept'],
+  //     exposedHeaders: ['accept'],
+  //     maxAge: 3600,
+  //     credentials: true
+  //   },
+  // },
+  // {
+  //   database: {
+  //     data: {
+  //       users: [{ id: 1, emoji: '🎉' }]
+  //     },
+  //     routes: {
+  //       '/*/users/:id': '/api/users/:id'
+  //     }
+  //   }
+  // },
   {
     configs: [] // annonymos
   },
