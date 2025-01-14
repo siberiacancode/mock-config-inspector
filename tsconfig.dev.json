@@ -3,6 +3,9 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "paths": {
+      "@/*": ["./app/src/*"]
+    },
     "resolveJsonModule": true,
     "types": ["node"],
     "allowJs": true,
