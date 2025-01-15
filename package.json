@@ -59,7 +59,7 @@
     "globals": "^15.12.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
-    "mock-config-server": "^3.6.1",
+    "mock-config-server": "4.0.1",
     "nodemon": "^3.1.7",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",

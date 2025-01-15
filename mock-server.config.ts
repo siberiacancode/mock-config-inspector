@@ -33,7 +33,8 @@ export type FlatMockServerConfig = [
 
 const flatMockServerConfig: FlatMockServerConfig = [
   {
-    baseUrl: '/'
+    baseUrl: '/',
+    port: 31299
   },
   // {
   //   port: 31299
