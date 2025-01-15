@@ -1,5 +1,6 @@
 {
   "name": "mock-config-inspector",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "engines": {
@@ -20,6 +21,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-tooltip": "^1.1.6",
     "@siberiacancode/reactuse": "^0.0.73",
     "@types/ws": "^8.5.13",
     "@types/yargs": "^17.0.33",

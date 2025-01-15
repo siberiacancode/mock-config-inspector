@@ -1,6 +1,14 @@
 import { useWebSocket } from '@siberiacancode/reactuse';
 import { useState } from 'react';
 
+import { Header, ServerInfoBar } from '@/components';
+import { getDefaultScheme } from '@/utils/helpers';
+
+import type { Component } from './components/ComponentsList/ComponentsList';
+
+import { ComponentsList } from './components/ComponentsList/ComponentsList';
+import { Providers } from './provider';
+
 interface AppProps {
   payload: {
     ws: {
@@ -9,6 +17,12 @@ interface AppProps {
     };
     config: MockServerConfig;
   }
+}
+
+interface ServerInfo {
+  baseUrl: string;
+  port: number;
+  staticPath: string;
 }
 
 const App = (props: AppProps) => {
@@ -36,13 +50,19 @@ const App = (props: AppProps) => {
     }
   });
 
-  return <div>
-    <pre>ws: {JSON.stringify(props.payload.ws, null, 2)}</pre>
-    <br />
-    <pre>settings {JSON.stringify(settings, null, 2)}</pre>
-    <br />
-    <pre>components {JSON.stringify(components, null, 2)}</pre>
-  </div>
+  const defaultScheme = getDefaultScheme();
+
+  return (
+    <>
+      <Providers scheme={{ defaultScheme }}>
+        <div className='flex flex-col bg-background items-center gap-xl'>
+          <Header />
+          <ServerInfoBar url={`http://localhost:${settings.port}${settings.staticPath}`} />
+          <ComponentsList components={components} />
+        </div>
+      </Providers>
+    </>
+  );
 };
 
 export default App;
